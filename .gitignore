@@ -1,0 +1,5 @@
+# Do not commit API tokens!
+token
+
+# Do not commit the list of chats subscribed to notifications!
+subscribed_chats.txt
