@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-Ruby >= 2.3.0, Bundler >= 1.17.3
+Ruby >= 2.3.0, Bundler >= 1.17.3 from devtoolset-6
 
 ## Steps
 
