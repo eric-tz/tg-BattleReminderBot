@@ -1,6 +1,6 @@
 require 'telegram/bot'
 
-token = File.read("./token").chomp
+token = File.read("/home/tg_bot/bot_dir/token").chomp
 
 $subscribed_chats = File.read("/home/tg_bot/bot_dir/subscribed_chats.csv").split("\n").compact.uniq.map{|a| a.to_i }
 $battle_times= [ 7,15,23 ]

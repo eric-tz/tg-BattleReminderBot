@@ -1,7 +1,7 @@
 require 'telegram/bot'
 require 'optparse'
 
-token = File.read("./token").chomp
+token = File.read("/home/tg_bot/bot_dir/token").chomp
 notification_type = ''
 
 OptionParser.new do |opt|
