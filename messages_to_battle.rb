@@ -9,43 +9,17 @@ OptionParser.new do |opt|
 end.parse!
 
 def aim_time(aim_level)
-  base = 315
+  base = 195
   aim_time = base - [aim_level, 6].min * 15 - [0,[aim_level - 6,4].min].max * 10 - [0,[aim_level - 10,5].min].max * 5
 end
 
 $subscribed_chats_file="/home/tg_bot/bot_dir/subscribed_chats.json"
 
 case notification_type
-when "aim1"
-  message = "⚠️ Battle is in 3:10! ⚠️\n\n🏹Rangers with Aiming 1, 10 minutes to ready your aim!"
-when "aim2"
-  message = "⚠️ Battle is in 2:55! ⚠️\n\n🏹Rangers with Aiming 2, 10 minutes to ready your aim!"
-when "aim3"
-  message = "⚠️ Battle is in 2:40! ⚠️\n\n🏹Rangers with Aiming 3, 10 minutes to ready your aim!"
-when "aim4"
-  message = "⚠️ Battle is in 2:25! ⚠️\n\n🏹Rangers with Aiming 4, 10 minutes to ready your aim!"
-when "aim5"
-  message = "⚠️ Battle is in 2:10! ⚠️\n\n🏹Rangers with Aiming 5, 10 minutes to ready your aim!"
-when "aim6"
-  message = "⚠️ Battle is in 1:55! ⚠️\n\n🏹Rangers with Aiming 6, 10 minutes to ready your aim!"
-when "aim7"
-  message = "⚠️ Battle is in 1:45! ⚠️\n\n🏹Rangers with Aiming 7, 10 minutes to ready your aim!"
-when "aim8"
-  message = "⚠️ Battle is in 1:35! ⚠️\n\n🏹Rangers with Aiming 8, 10 minutes to ready your aim!"
-when "aim9"
-  message = "⚠️ Battle is in 1:25! ⚠️\n\n🏹Rangers with Aiming 9, 10 minutes to ready your aim!"
-when "aim10"
-  message = "⚠️ Battle is in 1:15! ⚠️\n\n🏹Rangers with Aiming 10, 10 minutes to ready your aim!"
-when "aim11"
-  message = "⚠️ Battle is in 1:10! ⚠️\n\n🏹Rangers with Aiming 11, 10 minutes to ready your aim!"
-when "aim12"
-  message = "⚠️ Battle is in 1:05! ⚠️\n\n🏹Rangers with Aiming 12, 10 minutes to ready your aim!"
-when "aim13"
-  message = "⚠️ Battle is in 1:00! ⚠️\n\n🏹Rangers with Aiming 13, 10 minutes to ready your aim!"
-when "aim14"
-  message = "⚠️ Battle is in 0:55! ⚠️\n\n🏹Rangers with Aiming 14, 10 minutes to ready your aim!"
-when "aim15"
-  message = "⚠️ Battle is in 0:50! ⚠️\n\n🏹Rangers with Aiming 15, 10 minutes to ready your aim!"
+when /aim/
+  aim_level = notification_type[/\d+/].to_i
+  aim_mins = aim_time(aim_level) + 10
+  message = "⚠️ Battle is in #{aim_mins/60}:#{(aim_mins % 60).to_s.rjust(2,'0')}! ⚠️\n\n🏹Rangers with Aiming #{aim_level}, 10 minutes to ready your aim!"
 when "T30Battle"
   message = "⚠️ Battle is in 30 minutes! ⚠️\n\nThings to take note of before a war:\n➡️ If you had forested at night, remember to switch your torches out for battle equipments!\n\n➡️ Spend all your 💰 gold and make sure you have no unplanned transactions ongoing! (Especially if you're selling powder, sticks, leather or thread!)\n\n➡️Use the ⚖️ stock exchange to your advantage, hide your 📦 stocks!\n\n➡️ Check pin for orders!"
 when "T8Battle"
