@@ -42,6 +42,25 @@ Telegram::Bot::Client.run(token) do |bot|
       else
         bot.api.send_message(chat_id: message.chat.id, text: "This chat was not subscribed for battle notifications!")
       end
+    elsif message.text =~ /^\/aimlevels/
+      this_chat_index = subscribed_chats.index { |hash| hash["id"] == message.chat.id }
+      if this_chat_index.nil?
+        bot.api.send_message(chat_id: message.chat.id, text: "Please subscribe this chats to notifications first!")
+      else
+        levels = message.text.split(" ").select{ |text| text =~ /\d/}.map{ |text| text.to_i }
+        if levels.empty? 
+          bot.api.send_message(chat_id: message.chat.id, text: "Please list a space separated list of aim levels to subscribe to!")
+          if subscribed_chats[this_chat_index]["aim_levels"].empty?
+            bot.api.send_message(chat_id: message.chat.id, text: "This chat is currently not subscribed for any aim levels.")
+          else
+            bot.api.send_message(chat_id: message.chat.id, text: "This chat is currently subscribed for aim levels: #{subscribed_chats[this_chat_index]["aim_levels"].join(",")}")
+          end
+        else
+          subscribed_chats[this_chat_index]["aim_levels"] = levels
+          bot.api.send_message(chat_id: message.chat.id, text: "This chat is now subscribed for aim levels: #{subscribed_chats[this_chat_index]["aim_levels"].join(",")}")
+          write_chat_ids_to_file(subscribed_chats)
+        end
+      end
     end
   end
 end
