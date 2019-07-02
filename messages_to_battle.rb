@@ -1,6 +1,6 @@
 require 'telegram/bot'
 require 'optparse'
-
+require 'json'
 token = File.read("/home/tg_bot/bot_dir/token").chomp
 notification_type = ''
 
@@ -8,7 +8,8 @@ OptionParser.new do |opt|
   opt.on('--notification-type NAME') { |o| notification_type = o }
 end.parse!
 
-$subscribed_chats_file="/home/tg_bot/bot_dir/subscribed_chats.csv"
+
+$subscribed_chats_file="/home/tg_bot/bot_dir/subscribed_chats.json"
 
 case notification_type
 when "T90Battle"
@@ -20,8 +21,10 @@ when "T8Battle"
 end
 
 Telegram::Bot::Client.run(token) do |bot|
-  subscribed_chats = File.read($subscribed_chats_file).split("\n").compact.uniq.map{|a| a.to_i }
-  subscribed_chats.each do |id|
-    bot.api.send_message(chat_id: id, text: message)
+  subscribed_chats = JSON.parse(File.read($subscribed_chats_file))
+  subscribed_chats.each do |hash|
+      bot.api.send_message(chat_id: hash["id"], text: message)
+    end
   end
 end
+
