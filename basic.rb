@@ -24,8 +24,10 @@ Telegram::Bot::Client.run(token) do |bot|
   bot.listen do |message|
     if message.text == '/battletime' or message.text == '/battletime@BattleReminderBot'
       current_time=Time.now
-      next_battle_hr = ($battle_times.map { |num| num - current_time.hour }.select { |num| num >= 0 }.min) + current_time.hour
-      bot.api.send_message(chat_id: message.chat.id, text: "Next battle will be at #{"UTC " + next_battle_hr.to_s + "00"}, in #{next_battle_hr - current_time.hour - 1} hours and #{ (60 - current_time.min) % 60 } minutes!")
+      next_battle_hr = $battle_times[$battle_times.map { |num| num - current_time.hour }.select { |num| num > 0 }.each_with_index.min.last]
+      (next_battle_hr - current_time.hour < 0) ? hr_diff = next_battle_hr : hr_diff = next_battle_hr - current_time.hour
+      hr_diff -= 1 if current_time.min > 0
+      bot.api.send_message(chat_id: message.chat.id, text: "Next battle will be at #{"UTC " + next_battle_hr.to_s.rjust(2,'0') + "00"}, in #{hr_diff} hours and #{ (60 - current_time.min) % 60 } minutes!")
     elsif message.text == '/subscribe' or message.text == '/subscribe@BattleReminderBot'
       unless subscribed_chats.select { |hash| hash["id"] == message.chat.id }.empty?
         bot.api.send_message(chat_id: message.chat.id, text: "This chat is already subscribed for battle notifications!")
