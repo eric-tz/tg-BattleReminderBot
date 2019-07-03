@@ -20,8 +20,10 @@ when /aim/
   aim_level = notification_type[/\d+/].to_i
   aim_mins = aim_time(aim_level) + 10
   message = "⚠️ Battle is in #{aim_mins/60}:#{(aim_mins % 60).to_s.rjust(2,'0')}! ⚠️\n\n🏹Rangers with Aiming #{aim_level}, 10 minutes to ready your aim!"
-when "T30Battle"
-  message = "⚠️ Battle is in 30 minutes! ⚠️\n\nThings to take note of before a war:\n➡️ If you had forested at night, remember to switch your torches out for battle equipments!\n\n➡️ Spend all your 💰 gold and make sure you have no unplanned transactions ongoing! (Especially if you're selling powder, sticks, leather or thread!)\n\n➡️Use the ⚖️ stock exchange to your advantage, hide your 📦 stocks!\n\n➡️ Check pin for orders!"
+when "T45Battle"
+  message = "⚠️ Battle is in 45 minutes! ⚠️\n\nThings to take note of before a war:\n➡️ If you had forested at night, remember to switch your torches out for battle equipments!\n\n➡️ Spend all your 💰 gold and make sure you have no unplanned transactions ongoing! (Especially if you're selling powder, sticks, leather or thread!)\n\n➡️ Use the ⚖️ stock exchange to your advantage, hide your 📦 stocks!\n\n➡️ Check pin for orders!"
+when "T15Battle"
+  message = "⚠️ Battle is in 15 minutes! ⚠️\n\nLast call to hide 📦 stocks and 💰 gold!\nExchange closes in ~7 minutes!"
 when "T8Battle"
   message = "The stock market is now CLOSED.\n\nPlease spend any gold you may have left at the shop and PREPARE FOR BATTLE."
 end
