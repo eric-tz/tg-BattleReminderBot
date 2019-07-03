@@ -31,10 +31,17 @@ end
 Telegram::Bot::Client.run(token) do |bot|
   subscribed_chats = JSON.parse(File.read($subscribed_chats_file))
   subscribed_chats.each do |hash|
+    aim_level = nil
     if notification_type =~ /aim/
-      next unless hash["aim_levels"].include?(notification_type[/\d+/].to_i)
+      aim_level = notification_type[/\d+/].to_i
+      next unless hash["aim_levels"].include?(aim_level)
+      subscribers = hash["notifies"].select { |k,v| v.include?(aim_level) }
+      subscribers.empty? ? sub_string = "" : sub_string = subscribers.keys.map{ |string| "\n@"+string }.join("")
+      bot.api.send_message(chat_id: hash["id"], text: message + " " + sub_string)
+    else
+      subscribers = hash["notifies"]
+      subscribers.empty? ? sub_string = "" : sub_string = subscribers.keys.map{ |string| "\n@"+string }.join("")
+      bot.api.send_message(chat_id: hash["id"], text: message + " " + sub_string)
     end
-    bot.api.send_message(chat_id: hash["id"], text: message)
   end
 end
-
