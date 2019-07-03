@@ -31,8 +31,8 @@ Telegram::Bot::Client.run(token) do |bot|
   subscribed_chats.each do |hash|
     if notification_type =~ /aim/
       next unless hash["aim_levels"].include?(notification_type[/\d+/].to_i)
-      bot.api.send_message(chat_id: hash["id"], text: message)
     end
+    bot.api.send_message(chat_id: hash["id"], text: message)
   end
 end
 
