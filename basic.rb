@@ -33,7 +33,7 @@ Telegram::Bot::Client.run(token) do |bot|
         bot.api.send_message(chat_id: message.chat.id, text: "This chat is already subscribed for battle notifications!")
       else
         bot.api.send_message(chat_id: message.chat.id, text: "This chat is now subscribed for battle notifications!")
-        subscribed_chats << { "id" => message.chat.id, "aim_levels" => [], "notifies" => {} }
+        subscribed_chats << { "id" => message.chat.id, "aim_levels" => [], "notifies" => {}, "snooze" => [] }
         write_chat_ids_to_file(subscribed_chats)
       end
     elsif message.text == '/unsubscribe' or message.text == '/unsubscribe@BattleReminderBot'
@@ -89,6 +89,40 @@ Telegram::Bot::Client.run(token) do |bot|
         else
           bot.api.send_message(chat_id: message.chat.id, text: "@#{message.from.username} was not notified on notifications yet!")
         end
+      end
+    elsif message.text =~ /^\/snooze/
+      this_chat_index = subscribed_chats.index { |hash| hash["id"] == message.chat.id }
+      if this_chat_index.nil?
+        bot.api.send_message(chat_id: message.chat.id, text: "This chat isn't subscribed, why am I snoozing?")
+      else
+        times = message.text.split(" ")[0..-1].last
+        if times.nil? && !subscribed_chats[this_chat_index]["snooze"].empty?
+          bot.api.send_message(chat_id: message.chat.id, text: "This chat will not receive notifications during the following UTC hours: #{subscribed_chats[this_chat_index]["snooze"].join(",")}")
+        elsif times.nil?
+          bot.api.send_message(chat_id: message.chat.id, text: "Please send a comma-separated list of UTC hours to snooze during!")
+        else
+          subscribed_chats[this_chat_index]["snooze"] = []
+          times.split(",").each do |time|
+            unless time.include?("-")
+              subscribed_chats[this_chat_index]["snooze"] << time.to_i
+            else
+              ((time.split("-").first.to_i)..time.split("-").last.to_i).each do |num|
+                subscribed_chats[this_chat_index]["snooze"] << num
+              end
+            end
+          end
+          bot.api.send_message(chat_id: message.chat.id, text: "This chat will not receive notifications during the following UTC hours: #{subscribed_chats[this_chat_index]["snooze"].join(",")}")
+          write_chat_ids_to_file(subscribed_chats)
+        end
+      end
+    elsif message.text =~ /^\/unsnooze/
+      this_chat_index = subscribed_chats.index { |hash| hash["id"] == message.chat.id }
+      if this_chat_index.nil?
+        bot.api.send_message(chat_id: message.chat.id, text: "This chat isn't subscribed, why am I snoozing?")
+      else
+        subscribed_chats[this_chat_index]["snooze"] = []
+        write_chat_ids_to_file(subscribed_chats)
+        bot.api.send_message(chat_id: message.chat.id, text: "Snooze times have been cleared!")
       end
     end
   end

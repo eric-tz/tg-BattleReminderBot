@@ -31,6 +31,8 @@ end
 Telegram::Bot::Client.run(token) do |bot|
   subscribed_chats = JSON.parse(File.read($subscribed_chats_file))
   subscribed_chats.each do |hash|
+    current_hour = Time.now.hour
+    next if hash["snooze"].include?(current_hour)
     aim_level = nil
     if notification_type =~ /aim/
       aim_level = notification_type[/\d+/].to_i
