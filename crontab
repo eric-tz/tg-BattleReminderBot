@@ -28,8 +28,8 @@
 
 10 6,14,22 * * * . /home/tg_bot/enable_ruby_25; /opt/rh/rh-ruby25/root/usr/bin/ruby /home/tg_bot/bot_dir/messages_to_battle.rb --notification-type aim15 >>/home/tg_bot/battle.log 2>&1
 
-15 6,14,22 * * * . /home/tg_bot/enable_ruby_25; /opt/rh/rh-ruby25/root/usr/bin/ruby /home/tg_bot/bot_dir/messages_to_battle.rb --notification-type T45Battle >>/home/tg_bot/battle.log 2>&1
+15 6,14,22 * * * . /home/tg_bot/enable_ruby_25; /opt/rh/rh-ruby25/root/usr/bin/ruby /home/tg_bot/bot_dir/messages_to_battle.rb --notification-type battle1 >>/home/tg_bot/battle.log 2>&1
 
-45 6,14,22 * * * . /home/tg_bot/enable_ruby_25; /opt/rh/rh-ruby25/root/usr/bin/ruby /home/tg_bot/bot_dir/messages_to_battle.rb --notification-type T15Battle >>/home/tg_bot/battle.log 2>&1
+45 6,14,22 * * * . /home/tg_bot/enable_ruby_25; /opt/rh/rh-ruby25/root/usr/bin/ruby /home/tg_bot/bot_dir/messages_to_battle.rb --notification-type battle2 >>/home/tg_bot/battle.log 2>&1
 
-52 6,14,22 * * * . /home/tg_bot/enable_ruby_25; /opt/rh/rh-ruby25/root/usr/bin/ruby /home/tg_bot/bot_dir/messages_to_battle.rb --notification-type T8Battle >> /home/tg_bot/battle.log 2>&1
+52 6,14,22 * * * . /home/tg_bot/enable_ruby_25; /opt/rh/rh-ruby25/root/usr/bin/ruby /home/tg_bot/bot_dir/messages_to_battle.rb --notification-type battle3 >> /home/tg_bot/battle.log 2>&1

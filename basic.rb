@@ -68,13 +68,18 @@ Telegram::Bot::Client.run(token) do |bot|
       if this_chat_index.nil?
         bot.api.send_message(chat_id: message.chat.id, text: "Please subscribe this chats to notifications first!")
       else
-        levels = message.text.split(" ").select{ |text| text =~ /\d/}.map{ |text| text.to_i }.sort
-        if levels.empty?
-          bot.api.send_message(chat_id: message.chat.id, text: "@#{message.from.username} will be notified on default notifications!")
+        aim_levels = message.text.split(" ").select{ |text| text =~ /aim\d/ }.sort
+        battle_notes = message.text.split(" ").select{ |text| text =~ /battle\d/ }.sort
+        if aim_levels.empty? && battle_notes.empty?
+          bot.api.send_message(chat_id: message.chat.id, text: "@#{message.from.username} please specify which notifications to subscribe to!")
+        elsif aim_levels.empty? && !battle_notes.empty?
+          bot.api.send_message(chat_id: message.chat.id, text: "@#{message.from.username} will be notified on battle notifications: #{battle_notes.join(",")}!")
+        elsif !aim_levels.empty? && battle_notes.empty?
+          bot.api.send_message(chat_id: message.chat.id, text: "@#{message.from.username} will be notified on aim notifications: #{aim_levels.join(",")}!")
         else
-          bot.api.send_message(chat_id: message.chat.id, text: "@#{message.from.username} will be notified on default notifications and aim level #{levels.join(",")}!")
+          bot.api.send_message(chat_id: message.chat.id, text: "@#{message.from.username} will be notified on battle notifications: #{battle_notes.join(",")} and aim notifications: #{aim_levels.join(",")}!")
         end
-        subscribed_chats[this_chat_index]["notifies"][message.from.username] = levels
+        subscribed_chats[this_chat_index]["notifies"][message.from.username] = aim_levels + battle_notes
         write_chat_ids_to_file(subscribed_chats)
       end
     elsif message.text =~ /^\/unnotify/
@@ -87,7 +92,7 @@ Telegram::Bot::Client.run(token) do |bot|
           subscribed_chats[this_chat_index]["notifies"].delete(message.from.username)
           write_chat_ids_to_file(subscribed_chats)
         else
-          bot.api.send_message(chat_id: message.chat.id, text: "@#{message.from.username} was not notified on notifications yet!")
+          bot.api.send_message(chat_id: message.chat.id, text: "@#{message.from.username} was not notified on any notifications yet!")
         end
       end
     elsif message.text =~ /^\/snooze/
