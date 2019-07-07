@@ -40,6 +40,5 @@ Telegram::Bot::Client.run(token) do |bot|
     subscribers = hash["notifies"].select { |k,v| v.include?(notification_type) }
     subscribers.empty? ? sub_string = "" : sub_string = subscribers.keys.map{ |string| "\n@"+string }.join("")
     bot.api.send_message(chat_id: hash["id"], text: message + " " + sub_string)
-    end
   end
 end
