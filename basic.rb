@@ -68,8 +68,8 @@ Telegram::Bot::Client.run(token) do |bot|
       if this_chat_index.nil?
         bot.api.send_message(chat_id: message.chat.id, text: "Please subscribe this chats to notifications first!")
       else
-        aim_levels = message.text.split(" ").select{ |text| text =~ /aim\d/ }.sort
-        battle_notes = message.text.split(" ").select{ |text| text =~ /battle\d/ }.sort
+        aim_levels = message.text.split(" ").select{ |text| text =~ /aim\d/ }.reject { |text| text[/\d+/].to_i > 20 }.sort
+        battle_notes = message.text.split(" ").select{ |text| text =~ /battle\d/ }.reject { |text| text[/\d+/].to_i > 3 }.sort
         if aim_levels.empty? && battle_notes.empty?
           bot.api.send_message(chat_id: message.chat.id, text: "@#{message.from.username} please specify which notifications to subscribe to!")
         elsif aim_levels.empty? && !battle_notes.empty?
