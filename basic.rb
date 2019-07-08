@@ -71,7 +71,11 @@ Telegram::Bot::Client.run(token) do |bot|
         aim_levels = message.text.split(" ").select{ |text| text =~ /aim\d/ }.reject { |text| text[/\d+/].to_i > 20 }.sort
         battle_notes = message.text.split(" ").select{ |text| text =~ /battle\d/ }.reject { |text| text[/\d+/].to_i > 3 }.sort
         if aim_levels.empty? && battle_notes.empty?
-          bot.api.send_message(chat_id: message.chat.id, text: "@#{message.from.username} please specify which notifications to subscribe to!")
+          if subscribed_chats[this_chat_index]["notifies"].key?(message.from.username)
+            bot.api.send_message(chat_id: message.chat.id, text: "@#{message.from.username}, you are currently pinged on #{subscribed_chats[this_chat_index]["notifies"][message.from.username].join(",")}")
+          else
+            bot.api.send_message(chat_id: message.chat.id, text: "@#{message.from.username} please specify which notifications to subscribe to!")
+          end
         elsif aim_levels.empty? && !battle_notes.empty?
           bot.api.send_message(chat_id: message.chat.id, text: "@#{message.from.username} will be notified on battle notifications: #{battle_notes.join(",")}!")
         elsif !aim_levels.empty? && battle_notes.empty?
@@ -79,8 +83,10 @@ Telegram::Bot::Client.run(token) do |bot|
         else
           bot.api.send_message(chat_id: message.chat.id, text: "@#{message.from.username} will be notified on battle notifications: #{battle_notes.join(",")} and aim notifications: #{aim_levels.join(",")}!")
         end
-        subscribed_chats[this_chat_index]["notifies"][message.from.username] = aim_levels + battle_notes
-        write_chat_ids_to_file(subscribed_chats)
+        unless aim_levels.empty? && battle_notes.empty?
+          subscribed_chats[this_chat_index]["notifies"][message.from.username] = aim_levels + battle_notes
+          write_chat_ids_to_file(subscribed_chats)
+        end
       end
     elsif message.text =~ /^\/unnotify/
       this_chat_index = subscribed_chats.index { |hash| hash["id"] == message.chat.id }
