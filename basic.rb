@@ -135,6 +135,8 @@ Telegram::Bot::Client.run(token) do |bot|
         write_chat_ids_to_file(subscribed_chats)
         bot.api.send_message(chat_id: message.chat.id, text: "Snooze times have been cleared!")
       end
+    elsif message.text =~ /^\/help/ || message.text == '/start' || message.text == '/start@BattleReminderBot'
+      bot.api.send_message(chat_id: message.chat.id, text: "Bot usage:\n\\battletime - Time to next battle\n\\subscribe - Send battle reminders to current chat automatically\n\\unsubscribe - Unsubscribe from notifications\n\\aimlevels - Send a space-separated list of aim levels to subscribe to (overwrites).\n\\notify - Add ping to defaults. Add list of aim levels to notify on to\n\\unnotify - Remove all pings\n"
     end
   end
 end
